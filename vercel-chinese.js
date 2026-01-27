@@ -3,7 +3,7 @@
 // @namespace   https://github.com/liyixin21/vercel-chinese
 // @description 汉化 Vercel 界面
 // @version     0.1.0
-// @author      liyixin21
+// @author      liyixin21，Lirzh
 // @license     GPL-3.0
 // @match       *://*.vercel.app/*
 // @match       *://vercel.com/*
@@ -17,7 +17,7 @@
     'use strict';
 
     const lang = 'zh-CN'; // 设置默认语言
-    
+
     // 需要忽略的元素选择器
     const ignoredSelectors = [
         'code', 'pre', 'script', 'style', 'textarea', 'kbd',
@@ -25,7 +25,7 @@
         'input[type="text"]', 'input[type="password"]', 'input[type="email"]',
         '[data-do-not-translate]', '[data-translation-ignore]'
     ];
-    
+
     // 需要忽略的特定元素的类名或ID
     const ignoredClasses = [
         'CodeBlock', 'gitSha', 'deployment-url', 'geist-code', 'monospace',
@@ -66,7 +66,7 @@
         ['Deployment failed', '部署失败'],
         ['Deployment canceled', '部署已取消'],
         ['Deployment succeeded', '部署成功'],
-        
+
         // Git集成
         ['Commit', '提交'],
         ['Branch', '分支'],
@@ -82,7 +82,7 @@
         ['Main Branch', '主分支'],
         ['Deploy Hook', '部署钩子'],
         ['Create Hook', '创建钩子'],
-        
+
         // 项目设置
         ['Project Settings', '项目设置'],
         ['General', '常规'],
@@ -97,7 +97,7 @@
         ['Output Directory', '输出目录'],
         ['Install Command', '安装命令'],
         ['Development Command', '开发命令'],
-        
+
         // 团队和成员
         ['Team', '团队'],
         ['Teams', '团队'],
@@ -111,7 +111,7 @@
         ['Remove Member', '移除成员'],
         ['Transfer Ownership', '转让所有权'],
         ['Leave Team', '离开团队'],
-        
+
         // 状态和通知
         ['Success', '成功'],
         ['Error', '错误'],
@@ -124,7 +124,7 @@
         ['Email Notifications', '邮件通知'],
         ['Enable', '启用'],
         ['Disable', '禁用'],
-        
+
         // 按钮和操作
         ['Save', '保存'],
         ['Cancel', '取消'],
@@ -144,7 +144,7 @@
         ['Copied!', '已复制!'],
         ['Download', '下载'],
         ['Upload', '上传'],
-        
+
         // 项目创建和导入
         ['New Project', '新项目'],
         ['Import Git Repository', '导入 Git 仓库'],
@@ -159,7 +159,7 @@
         ['Import Project', '导入项目'],
         ['Deploy Template', '部署模板'],
         ['Select Template', '选择模板'],
-        
+
         // 通用词汇
         ['Loading', '加载中'],
         ['Documentation', '文档'],
@@ -187,15 +187,15 @@
     setTimeout(() => {
         forceApplyAllTranslations();
     }, 800); // 延迟800ms，确保页面已经加载完成
-    
+
     // 监听DOM变化后的全面翻译方法
     function forceApplyAllTranslations() {
         // 先对所有文本节点进行翻译
         replaceText(document.body);
-        
+
         // 然后针对特定元素进行专项翻译
         handleSpecialElements();
-        
+
         // 查找并处理所有按钮元素
         document.querySelectorAll('button, a.button, [role="button"]').forEach(btn => {
             if (!shouldIgnoreNode(btn)) {
@@ -206,7 +206,7 @@
                 });
             }
         });
-        
+
         // 处理所有的页面导航和标题元素
         document.querySelectorAll('nav, header, h1, h2, h3, .title, .header, .navigation').forEach(el => {
             if (!shouldIgnoreNode(el)) {
@@ -217,7 +217,7 @@
                 });
             }
         });
-        
+
         // 处理特定的问题元素
         const problemElements = [
             'Visit with Toolbar',
@@ -236,7 +236,7 @@
             'No Preview Deployments',
             'using our Git connections'
         ];
-        
+
         // 遍历所有文本节点查找特定问题词组
         const walker = document.createTreeWalker(
             document.body,
@@ -253,31 +253,31 @@
             },
             false
         );
-        
+
         let node;
         while(node = walker.nextNode()) {
             let text = node.nodeValue;
             let modified = false;
-            
+
             problemElements.forEach(phrase => {
                 if (text.includes(phrase) && i18n.has(phrase)) {
                     text = text.replace(new RegExp(escapeRegExp(phrase), 'g'), i18n.get(phrase));
                     modified = true;
                 }
             });
-            
+
             if (modified) {
                 node.nodeValue = text;
             }
         }
-        
+
         // 处理常见的复数形式问题（英文加s的情况）
         document.querySelectorAll('*').forEach(el => {
             if (el.childNodes && el.childNodes.length && !shouldIgnoreNode(el)) {
                 Array.from(el.childNodes).forEach(node => {
                     if (node.nodeType === 3 && node.nodeValue && node.nodeValue.trim()) {
                         let text = node.nodeValue;
-                        
+
                         // 处理常见英文复数形式
                         const pluralWords = ['Domains', 'Deployments', 'Branches', 'Requests', 'Logs'];
                         pluralWords.forEach(word => {
@@ -286,12 +286,12 @@
                                 text = text.replace(new RegExp(`\\b${escapeRegExp(word)}\\b`, 'g'), i18n.get(singular));
                             }
                         });
-                        
+
                         // 处理结尾有s的中文翻译
                         if (text.match(/[\u4e00-\u9fa5]+s\b/)) {
                             text = text.replace(/(\p{Script=Han}+)s\b/gu, '$1');
                         }
-                        
+
                         if (text !== node.nodeValue) {
                             node.nodeValue = text;
                         }
@@ -300,39 +300,39 @@
             }
         });
     }
-    
+
     // 修改原有的处理函数调用forceApplyAllTranslations
     function processMutations(mutations) {
         // 使用防抖动技术
         clearTimeout(window.fullTranslationTimer);
         window.fullTranslationTimer = setTimeout(() => {
             let shouldFullTranslate = false;
-            
+
             mutations.forEach(mutation => {
                 // 检查是否有重要元素变化
                 if (mutation.addedNodes.length > 0) {
                     for (let i = 0; i < mutation.addedNodes.length; i++) {
                         const node = mutation.addedNodes[i];
-                        if (node.nodeType === 1 && 
-                            (node.tagName === 'DIV' || node.tagName === 'SECTION' || 
-                             node.classList && (node.classList.contains('panel') || 
-                                              node.classList.contains('card') || 
+                        if (node.nodeType === 1 &&
+                            (node.tagName === 'DIV' || node.tagName === 'SECTION' ||
+                             node.classList && (node.classList.contains('panel') ||
+                                              node.classList.contains('card') ||
                                               node.classList.contains('modal')))) {
                             shouldFullTranslate = true;
                             break;
                         }
                     }
                 }
-                
+
                 // 处理字符变更
                 if (mutation.type === 'characterData') {
-                    if (mutation.target && mutation.target.nodeValue && mutation.target.nodeValue.trim() && 
+                    if (mutation.target && mutation.target.nodeValue && mutation.target.nodeValue.trim() &&
                         !shouldIgnoreNode(mutation.target.parentNode)) {
                         translateTextNode(mutation.target);
                     }
                 }
             });
-            
+
             // 如果有重要元素变化，执行完整翻译
             if (shouldFullTranslate) {
                 forceApplyAllTranslations();
@@ -349,7 +349,7 @@
                             }
                         }
                     });
-                    
+
                     // 处理属性变化
                     if (mutation.type === 'attributes') {
                         const target = mutation.target;
@@ -374,8 +374,8 @@
     });
 
     // 开始监听页面变化
-    bodyObserver.observe(document.body, { 
-        childList: true, 
+    bodyObserver.observe(document.body, {
+        childList: true,
         subtree: true,
         characterData: true,
         attributes: true,
@@ -385,19 +385,19 @@
     // 是否应该忽略节点
     function shouldIgnoreNode(node) {
         if (!node || node.nodeType !== 1) return false;
-        
+
         // 检查是否为应该忽略的元素类型
         if (ignoredSelectors.some(selector => node.matches && node.matches(selector))) {
             return true;
         }
-        
+
         // 检查是否包含应该忽略的类名
         if (node.className && typeof node.className === 'string') {
             if (ignoredClasses.some(cls => node.className.includes(cls))) {
                 return true;
             }
         }
-        
+
         // 检查父元素
         let parent = node.parentNode;
         while (parent && parent !== document.body) {
@@ -413,22 +413,22 @@
             }
             parent = parent.parentNode;
         }
-        
+
         return false;
     }
 
     // 翻译单个文本节点
     function translateTextNode(node) {
         if (!node || !node.nodeValue || !node.nodeValue.trim()) return;
-        
+
         // 检查是否应该忽略该节点的父元素
         if (node.parentNode && shouldIgnoreNode(node.parentNode)) {
             return;
         }
-        
+
         let text = node.nodeValue;
         let translated = false;
-        
+
         // 首先尝试完整匹配长句子
         i18n.forEach((value, key) => {
             if (text.includes(key) && key.includes(' ') && key.length > 10) {
@@ -436,7 +436,7 @@
                 translated = true;
             }
         });
-        
+
         // 然后匹配短词和单词
         i18n.forEach((value, key) => {
             // 使用更精确的匹配方式，避免部分单词被错误替换
@@ -456,7 +456,7 @@
                 }
             }
         });
-        
+
         if (translated) {
             node.nodeValue = text;
         }
@@ -470,13 +470,13 @@
     // 翻译元素属性
     function translateAttribute(element, attrName) {
         if (!element || !element.hasAttribute(attrName)) return;
-        
+
         const attrValue = element.getAttribute(attrName);
         if (!attrValue || !attrValue.trim()) return;
-        
+
         let newValue = attrValue;
         let translated = false;
-        
+
         // 首先匹配长句
         i18n.forEach((value, key) => {
             if (newValue.includes(key) && key.includes(' ') && key.length > 10) {
@@ -484,7 +484,7 @@
                 translated = true;
             }
         });
-        
+
         // 然后匹配短词
         i18n.forEach((value, key) => {
             if (key.includes(' ') || !/^[a-zA-Z0-9]+$/.test(key)) {
@@ -502,7 +502,7 @@
                 }
             }
         });
-        
+
         if (translated) {
             element.setAttribute(attrName, newValue);
         }
@@ -511,7 +511,7 @@
     // 替换文本函数
     function replaceText(rootNode) {
         if (!rootNode || shouldIgnoreNode(rootNode)) return;
-        
+
         // 处理所有文本节点
         const textWalker = document.createTreeWalker(
             rootNode,
@@ -529,12 +529,12 @@
             },
             false
         );
-        
+
         let textNode;
         while (textNode = textWalker.nextNode()) {
             translateTextNode(textNode);
         }
-        
+
         // 处理元素属性
         const elementWalker = document.createTreeWalker(
             rootNode,
@@ -547,27 +547,27 @@
             },
             false
         );
-        
+
         let element;
         while (element = elementWalker.nextNode()) {
             // 翻译title属性
             if (element.hasAttribute('title')) {
                 translateAttribute(element, 'title');
             }
-            
+
             // 翻译placeholder属性
             if (element.hasAttribute('placeholder')) {
                 translateAttribute(element, 'placeholder');
             }
-            
+
             // 翻译aria-label属性
             if (element.hasAttribute('aria-label')) {
                 translateAttribute(element, 'aria-label');
             }
-            
+
             // 翻译按钮和输入框的value
-            if ((element.tagName === 'INPUT' || element.tagName === 'BUTTON') && 
-                element.hasAttribute('value') && 
+            if ((element.tagName === 'INPUT' || element.tagName === 'BUTTON') &&
+                element.hasAttribute('value') &&
                 !element.getAttribute('type') === 'password') {
                 translateAttribute(element, 'value');
             }
@@ -591,7 +591,30 @@
         i18n.set('Your Projects', '您的项目');
         i18n.set('Last updated', '最后更新');
         i18n.set('Last deployed', '最后部署');
-        
+        i18n.set('New', '新的');
+        i18n.set('Upgrade', '升级');
+        i18n.set('Find...', '搜索...');
+        i18n.set('Learn more', '了解更多');
+        i18n.set('Dismiss', ' 关闭 ');
+        i18n.set('per', '每');
+        i18n.set('Favorite', '最喜欢的');
+        i18n.set('Transfer', ' 转让');
+        i18n.set('Directory', ' 目录 ');
+        i18n.set('Active', '活跃');
+        i18n.set('No', '无');
+        i18n.set('Current', ' 当前 ');
+        i18n.set('Recently', '最近地');
+        i18n.set('Deleted', '已删除');
+        i18n.set('All', '所有');
+        i18n.set('Resources', '资源');
+        i18n.set('Graph', '图表');
+        i18n.set('Not Found', '未找到');
+        i18n.set('Installed', '已安装');
+        i18n.set('deployments', '部署记录');
+        i18n.set('from','来自');
+        i18n.set('Event', '事件');
+        i18n.set('All Time', '全部时间');
+
         // 部署详情
         i18n.set('Deployment Details', '部署详情');
         i18n.set('Source', '源码');
@@ -610,7 +633,8 @@
         i18n.set('Edge Functions', '边缘函数');
         i18n.set('Edge Middleware', '边缘中间件');
         i18n.set('Cache', '缓存');
-        
+        i18n.set('Retention', ' 留存策略 ');
+
         // 环境变量
         i18n.set('Add Environment Variable', '添加环境变量');
         i18n.set('Name', '名称');
@@ -625,7 +649,7 @@
         i18n.set('Secret', '密钥');
         i18n.set('System Environment Variables', '系统环境变量');
         i18n.set('User Environment Variables', '用户环境变量');
-        
+
         // 域名设置
         i18n.set('Add Domain', '添加域名');
         i18n.set('Domain Name', '域名名称');
@@ -650,7 +674,7 @@
         i18n.set('Source Path', '源路径');
         i18n.set('Destination Path', '目标路径');
         i18n.set('Status Code', '状态码');
-        
+
         // 计划和付费
         i18n.set('Hobby', '业余');
         i18n.set('Pro', '专业版');
@@ -673,7 +697,8 @@
         i18n.set('Included', '已包含');
         i18n.set('Analytics Retention', '分析数据保留');
         i18n.set('SFTP Access', 'SFTP访问');
-        
+        i18n.set('for 2x more CPUs and faster builds', ' 配备 2 倍核数 CPU，构建速度更快 ');
+
         // 账户和安全
         i18n.set('Account', '账户');
         i18n.set('Account Settings', '账户设置');
@@ -695,7 +720,7 @@
         i18n.set('Token Permissions', '令牌权限');
         i18n.set('Read-only', '只读');
         i18n.set('Full Access', '完全访问');
-        
+
         // 框架和技术术语
         i18n.set('Next.js', 'Next.js');
         i18n.set('React', 'React');
@@ -719,7 +744,7 @@
         i18n.set('API Routes', 'API路由');
         i18n.set('Serverless', '无服务器');
         i18n.set('Monorepo', '单体仓库');
-        
+
         // 其他常用
         i18n.set('Dark Mode', '暗色模式');
         i18n.set('Light Mode', '亮色模式');
@@ -731,7 +756,8 @@
         i18n.set('Documentation', '文档');
         i18n.set('Support', '支持');
         i18n.set('Changelog', '更新日志');
-        
+        i18n.set('Latest', '最新');
+
         // Vercel特有的功能和概念
         i18n.set('Speed Insights', '速度洞察');
         i18n.set('Web Vitals', 'Web指标');
@@ -755,7 +781,17 @@
         i18n.set('Caching', '缓存');
         i18n.set('Hosting', '托管');
         i18n.set('Logs', '日志');
-        
+        i18n.set('Knowledge Base', ' 知识库 ');
+        i18n.set('Academy', ' 学习中心 ');
+        i18n.set('AI SDK', 'AI 软件开发工具包 ');
+        i18n.set('Workflow DevKit', ' 工作流开发工具包 ');
+        i18n.set('Chat SDK', ' 聊天开发工具包 ');
+        i18n.set('Streamdown AI', 'Streamdown 智能助手 ');
+        i18n.set('Experience the new navigation', '体验全新导航');
+        i18n.set('SDKs', '开发工具包');
+        i18n.set('SDK', '开发工具包');
+        i18n.set('aliased', '已设置域名');
+
         // 更多专业术语
         i18n.set('Continuous Integration', '持续集成');
         i18n.set('Continuous Deployment', '持续部署');
@@ -777,7 +813,14 @@
         i18n.set('Rollback', '回滚');
         i18n.set('Versioning', '版本控制');
         i18n.set('Changelog', '更新日志');
-        
+        i18n.set('Alerts', ' 告警 ');
+        i18n.set('All Branches...', ' 所有分支…');
+        i18n.set('All Authors...', ' 所有提交者…');
+        i18n.set('Select Date Range', ' 选择日期范围 ');
+        i18n.set('Inbox', ' 通知中心 ');
+        i18n.set('Comments', '评论');
+        i18n.set('Load More', '加载更多');
+
         // 词条
         i18n.set('Deployment Configuration', '部署配置');
         i18n.set('Fluid Compute', '流畅计算');
@@ -787,7 +830,16 @@
         i18n.set('branch.', '分支。');
         i18n.set('Track visitors and page views', '跟踪访问者和页面浏览量');
         i18n.set('Edge Requests', '边缘请求');
+        i18n.set('Exceeded free resources', '超出免费资源限额');
+        i18n.set('Fast Data Transfer', '高速数据传输');
         i18n.set('Function Invocations', '函数调用');
+        i18n.set('Fluid Active CPU', '动态智能 CPU');
+        i18n.set('Function Duration', '函数运行时长');
+        i18n.set('Edge Request CPU Duration', '边缘请求 CPU 耗时');
+        i18n.set('ISR Writes', '增量静态再生写入');
+        i18n.set('ISR Reads', '增量静态再生读取');
+        i18n.set('Fast Origin Transfer', '源站高速传输');
+        i18n.set('Fluid Provisioned Memory', '动态配置内存');
         i18n.set('错误 Rate', '错误率');
         i18n.set('Error Rate', '错误率');
         i18n.set('requests','请求')
@@ -809,6 +861,38 @@
         i18n.set('weeks', '周');
         i18n.set('months', '月');
         i18n.set('years', '年');
+        i18n.set('hour', '小时');
+        i18n.set('minute', '分钟');
+        i18n.set('second', '秒');
+        i18n.set('day', '天');
+        i18n.set('week', '周');
+        i18n.set('month', '月');
+        i18n.set('year', '年');
+        i18n.set('Jan', '1月');
+        i18n.set('Feb', '2月');
+        i18n.set('Mar', '3月');
+        i18n.set('Apr', '4月');
+        i18n.set('May', '5月');
+        i18n.set('Jun', '6月');
+        i18n.set('Jul', '7月');
+        i18n.set('Aug', '8月');
+        i18n.set('Sept', '9月');
+        i18n.set('Sep', '9月');
+        i18n.set('Oct', '10月');
+        i18n.set('Nov', '11月');
+        i18n.set('Dec', '12月');
+        i18n.set('January', '一月');
+        i18n.set('February', '二月');
+        i18n.set('March', '三月');
+        i18n.set('April', '四月');
+        i18n.set('May', '五月');
+        i18n.set('June', '六月');
+        i18n.set('July', '七月');
+        i18n.set('August', '八月');
+        i18n.set('September', '九月');
+        i18n.set('October', '十月');
+        i18n.set('November', '十一月');
+        i18n.set('December', '十二月');
         i18n.set('排序 由 activity', '按活动排序');
         i18n.set('排序 由 name', '按名称排序');
         i18n.set('搜索 Repositories and 项目...', '搜索存储库和项目...');
@@ -833,20 +917,44 @@
         i18n.set('Send 反馈...', '发送反馈...');
         i18n.set('Developer Tools', '开发者工具');
         i18n.set('搜索 开发者工具', '搜索开发者工具');
-
+        i18n.set('Base Price', ' 基础定价 ');
+        i18n.set('Additional Events', ' 额外事件量 ');
+        i18n.set('Archive', ' 归档 ');
+        i18n.set('Console', '控制台');
 
         // 精确匹配长句
         i18n.set('Firewall is active', '防火墙已激活');
         i18n.set('Track visitors and page views', '跟踪访问者和页面浏览量');
         i18n.set('应用', '应用');
-        
+        i18n.set('预览环境 部署记录 that you have recently visited or created will appear here.', ' 最近访问 / 创建的预览环境部署将显示于此。');
+        i18n.set('Get alerted for anomalies', ' 异常情况实时告警 ');
+        i18n.set('Automatically monitor your projects for anomalies and get notified.', ' 自动监控项目异常并及时推送通知。');
+        i18n.set('Get notified when a function starts failing or usage spikes.', ' 当函数运行异常或调用量激增时，将为你发送通知。');
+        i18n.set('Explore data of the past 30 天 across 可观测性 and 日志.', ' 跨可观测性与日志模块，查看近 30 天数据。');
+        i18n.set('Find exactly what you are looking for with custom queries.', ' 通过自定义查询，精准定位所需内容。');
+        i18n.set('保存 and share queries to collaborate with your team.', ' 保存并分享查询语句，高效协作团队工作。');
+        i18n.set('Dig deep into external API 请求 made 由 your functions.', ' 深度分析函数发起的外部 API 请求。');
+        i18n.set('Unlock insights into latency, middleware, and external APIs.', ' 挖掘延迟、中间件及外部 API 的核心分析洞察。');
+        i18n.set('* Estimate is based on your team\'s activity over the last 30 天. The actual cost will vary depending on future usage patterns.', '* 费用预估基于团队近 30 天的使用行为，实际费用将根据未来使用情况有所浮动。');
+        i18n.set('Total events in the last 30 天', ' 近 30 天事件总数 ');
+        i18n.set('4M additional events × $1.20 每 million', ' 额外 400 万事件 × 1.20 美元 / 百万 ');
+        i18n.set('Includes 1 million events, across all projects', ' 包含全项目 100 万事件额度 ');
+        i18n.set('$10 每 月 + $1.20 每 million events', '10 美元 / 月 + 1.20 美元 / 百万事件 ');
+        i18n.set('You don\'t have any integration installed.', '你尚未安装任何集成工具。');
+        i18n.set('Explore more integrations to expand your Vercel development experience.', '探索更多集成工具，拓展你的 Vercel 开发体验。');
+        i18n.set('搜索 any domain', '搜索任意域名');
+
         // 更多导航和项目设置
         i18n.set('Repository', '代码仓库');
         i18n.set('Usage', '使用量');
         i18n.set('Visit', '访问');
         i18n.set('Hobby', '业余版');
         i18n.set('deployment', '部署');
-        
+        i18n.set ('Flags', ' 功能标识 ');
+        i18n.set ('AI Gateway', 'AI 网关 ');
+        i18n.set ('Sandboxes', ' 沙箱环境 ');
+        i18n.set ('Agent', ' 智能代理 ');
+
         // 补充一些特定于页面的术语
         i18n.set('ago', '前');
         i18n.set('by', '由');
@@ -856,6 +964,31 @@
         i18n.set('Legal', '法律条款');
         i18n.set('Guides', '指南');
         i18n.set('hidden files', '隐藏文件');
+        i18n.set('Try it out', '试一试');
+        i18n.set ('Anomaly', ' 异常');
+        i18n.set ('retention', ' 数据留存 ');
+        i18n.set ('Custom Queries', ' 自定义查询 ');
+        i18n.set ('Notebooks', ' 笔记本 ');
+        i18n.set ('External APIs Insights', ' 外部 API 分析洞察 ');
+        i18n.set ('Advanced Insights', ' 高级分析洞察 ');
+        i18n.set ('Cost Estimate*', ' 费用预估 *');
+        i18n.set ('External API Requests', ' 外部 API 请求 ');
+        i18n.set ('Function Executions', ' 函数执行 ');
+        i18n.set ('Middleware Invocations', ' 中间件调用 ');
+        i18n.set('Your site is growing!', '你的站点流量正在增长！');
+        i18n.set('Your free team', '你的免费团队');
+        i18n.set('has used', '已使用');
+        i18n.set('of the included free tier usage for', '占包含的「免费版」可用额度');
+        i18n.set('Your recent', '你近期的');
+        i18n.set('has been promoted on', '已在该场景完成升级');
+        i18n.set('failed to deploy in the', '部署失败于');
+        i18n.set('environment', '环境');
+        i18n.set('settings', '设置');
+        i18n.set('Browse Marketplace', '浏览应用市场');
+        i18n.set('All Time', '全部时间');
+        i18n.set('Third Party', '第三方');
+        i18n.set('Existing', '现有的');
+        i18n.set('Select all', '全选');
 
         // 补充截图中未翻译的内容
         i18n.set('Visit with Toolbar', '使用工具栏访问');
@@ -878,9 +1011,21 @@
         i18n.set('Docs', '文档');
         i18n.set('Store', '存储');
         i18n.set('Domain', '域名');
+        i18n.set('升级 to 专业版', '升级到专业版');
+        i18n.set('升级 to 可观测性 Plus', ' 升级至可观测性升级版');
+        i18n.set('可观测性 Plus', '可观测性升级版');
+        i18n.set('Get more information about', '了解更多');
+        i18n.set('Upgrading to 可观测性升级版 requires a paid plan.', ' 升级至可观测性升级版需开通付费套餐。');
+        i18n.set('Automatically created for pushes to', ' 推送到该分支时自动创建');
+        i18n.set('is enabled for this project — some deployments will be deleted after a set time period.', '已启用 —— 部分部署记录将在设定周期后自动删除。');
+        i18n.set('The','这个');
+        i18n.set('was deleted due to this project\'s', '已被删除因');
+        i18n.set('to','到');
+        i18n.set('转让 In', '转入');
+        i18n.set('Buy', '购买');
 
     }
-    
+
     // 添加一个调试按钮，用于手动触发翻译（对调试很有用）
     function addDebugButton() {
         const debugBtn = document.createElement('button');
@@ -897,23 +1042,23 @@
         debugBtn.style.cursor = 'pointer';
         debugBtn.style.opacity = '0.7';
         debugBtn.style.transition = 'opacity 0.3s';
-        
+
         debugBtn.addEventListener('mouseover', () => {
             debugBtn.style.opacity = '1';
         });
-        
+
         debugBtn.addEventListener('mouseout', () => {
             debugBtn.style.opacity = '0.7';
         });
-        
+
         debugBtn.addEventListener('click', () => {
             replaceText(document.body);
             alert('手动翻译已触发');
         });
-        
+
         document.body.appendChild(debugBtn);
     }
-    
+
     // 开发环境下可以启用调试按钮
     // if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
     //     addDebugButton();
@@ -927,7 +1072,7 @@
                 translateTextNode(el.firstChild);
             }
         });
-        
+
         // 处理页面上的按钮
         document.querySelectorAll('button, .geist-button').forEach(btn => {
             if (!shouldIgnoreNode(btn) && btn.textContent && btn.textContent.trim()) {
@@ -943,7 +1088,7 @@
                 }
             }
         });
-        
+
         // 处理标题和特定UI元素
         document.querySelectorAll('h1, h2, h3, h4, h5, h6, .card-title, .panel-title, .section-title').forEach(el => {
             if (!shouldIgnoreNode(el) && el.textContent && el.textContent.trim()) {
@@ -955,7 +1100,7 @@
                 });
             }
         });
-        
+
         // 处理特定的数字单位，如"1K requests"等
         document.querySelectorAll('span, div, p').forEach(el => {
             if (!shouldIgnoreNode(el) && el.textContent && /\d+K\s+\w+/.test(el.textContent)) {
@@ -973,12 +1118,12 @@
             }
         });
     }
-    
+
     // 设置特殊元素的观察器
     function setupSpecialObservers() {
         // 观察页面上的主要容器区域，某些区域可能使用了AJAX加载
         const mainContainers = document.querySelectorAll('main, [role="main"], .main-content, .dashboard, .project-view');
-        
+
         mainContainers.forEach(container => {
             const containerObserver = new MutationObserver(mutations => {
                 // 使用防抖动技术，减少重复翻译次数
@@ -987,13 +1132,13 @@
                     handleSpecialElements();
                 }, 200);
             });
-            
-            containerObserver.observe(container, { 
-                childList: true, 
+
+            containerObserver.observe(container, {
+                childList: true,
                 subtree: true
             });
         });
-        
+
         // 专门监听对话框和弹出窗口
         document.addEventListener('click', function(e) {
             // 点击后延迟处理，因为可能会触发对话框或弹出菜单
@@ -1006,7 +1151,7 @@
             }, 300);
         }, false);
     }
-    
+
     // 在页面加载完成后执行一次全面翻译
     window.addEventListener('load', function() {
         setTimeout(() => {
@@ -1019,9 +1164,9 @@
         setTimeout(() => {
             // 检查是否点击了可能触发内容变化的元素
             if (e.target && (
-                e.target.tagName === 'BUTTON' || 
-                e.target.tagName === 'A' || 
-                e.target.closest('button') || 
+                e.target.tagName === 'BUTTON' ||
+                e.target.tagName === 'A' ||
+                e.target.closest('button') ||
                 e.target.closest('a') ||
                 e.target.getAttribute('role') === 'tab' ||
                 e.target.getAttribute('role') === 'button')
