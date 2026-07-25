@@ -1,0 +1,13 @@
+{
+  "name": "vercel-chinese",
+  "version": "1.0.0",
+  "description": "Vercel 界面汉化脚本",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test test/*.test.js",
+    "dev": "node scripts/dev.js"
+  },
+  "license": "MIT",
+  "devDependencies": {}
+}
