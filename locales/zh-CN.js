@@ -430,6 +430,7 @@ I18N["zh-CN"]["dashboard"] = {
         "Visit with Toolbar": "使用工具栏访问",
         "Add Favorite": "添加收藏",
         "Transfer Project": "转移项目",
+        "Project": "项目",
     },
     regexp: [],
     selector: [],
