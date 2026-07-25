@@ -17,8 +17,8 @@
 
 | 版本 | 说明 | 安装链接 |
 |------|------|----------|
-| **引擎版**（推荐） | 引擎与词典分离，词典自动从 CDN 拉取最新版 | [点击安装](https://gh.liyixin.vip/https://raw.githubusercontent.com/liyixin21/vercel-chinese/main/dist/main.user.js) |
-| **合并版** | 词典内置，单文件，无需联网更新 | [点击安装](https://gh.liyixin.vip/https://raw.githubusercontent.com/liyixin21/vercel-chinese/main/dist/vercel-chinese.user.js) |
+| **引擎版**（推荐） | 引擎与词典分离，词典自动从 CDN 拉取最新版 | [点击安装](https://ghproxy.liyixin.vip/https://raw.githubusercontent.com/liyixin21/vercel-chinese/main/dist/main.user.js) |
+| **合并版** | 词典内置，单文件，无需联网更新 | [点击安装](https://ghproxy.liyixin.vip/https://raw.githubusercontent.com/liyixin21/vercel-chinese/main/dist/vercel-chinese.user.js) |
 
 
 点击链接后，Tampermonkey 会弹出安装确认页面，点击「安装」即可。

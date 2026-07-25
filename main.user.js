@@ -9,7 +9,7 @@
 // @match        *://vercel.com/*
 // @match        *://*.vercel.com/*
 // @match        *://*.vercel.app/*
-// @require      https://gh.liyixin.vip/https://raw.githubusercontent.com/liyixin21/vercel-chinese/gh-pages/locals.js?v1.0.0
+// @require      https://ghproxy.liyixin.vip/https://raw.githubusercontent.com/liyixin21/vercel-chinese/main/locals.js?v1.0.0
 // @run-at       document-start
 // @grant        none
 // ==/UserScript==
