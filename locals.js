@@ -551,8 +551,12 @@ I18N["zh-CN"]["dashboard"] = {
         "Visit with Toolbar": "使用工具栏访问",
         "Add Favorite": "添加收藏",
         "Transfer Project": "转移项目",
+        "Search Projects": "搜索项目",
+        "Create Project": "创建项目",
+        "Find Project…": "查找项目...",
 
         // Add New 下拉菜单
+        "Project": "项目",
         "Domain": "域名",
         "Store": "数据库",
         "Integration": "集成",
