@@ -24,7 +24,7 @@ const MERGED_HEADER = `// ==UserScript==
 // @description  汉化 Vercel 网站界面，集成词典的单文件版本。
 // @version      ${VERSION}
 // @author       liyixin21
-// @license      MIT
+// @license      GPL-3.0
 // @icon         https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/180x180.png
 // @match        *://vercel.com/*
 // @match        *://*.vercel.com/*

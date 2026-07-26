@@ -4,7 +4,7 @@
 // @description  汉化 Vercel 网站界面。词典与引擎分离，自动更新翻译数据。
 // @version      1.0.0
 // @author       liyixin21
-// @license      MIT
+// @license      GPL-3.0
 // @icon         https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/180x180.png
 // @match        *://vercel.com/*
 // @match        *://*.vercel.com/*
